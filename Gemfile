@@ -31,10 +31,13 @@ gem 'jbuilder', '~> 2.0'
 # gem 'capistrano-rails', group: :development
 
 gem 'nobrainer', github: 'nviennot/nobrainer', ref: 'f18e104'
+gem 'bcrypt'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platform: :mri
+  gem 'pry'
+  gem 'binding_of_caller'
 end
 
 group :development do
