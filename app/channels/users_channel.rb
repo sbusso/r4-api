@@ -1,30 +1,33 @@
 class UsersChannel < ApplicationCable::Channel  
   def subscribed
-    stream_from 'users'
+    @channel_stream = current_user
+    stream_from @channel_stream
   end
 
-  def createUser(params)
+  def create(params)
     user = User.new(email: params['email'], password: params['password'])
     response_data = {}
 
     if user.save
       response_data = {
-        operation: 'createUser', 
+        operation: 'create', 
         status: 'success', 
-        response: 'User is registered successfully'
+        data: user,
+        message: 'User is registered successfully'
       }
     else
       response_data = {
-        operation: 'createUser', 
-        status: 'failed', 
-        response: user.errors.full_messages
+        operation: 'create', 
+        status: 'fail', 
+        data: user.errors.messages,
+        message: 'User is not registered'
       }
     end
 
-    ActionCable.server.broadcast 'users', response_data
+    ActionCable.server.broadcast @channel_stream, response_data
   end
 
-  def loginUser(params)
+  def login(params)
     user = User.where(email: params['email'], password: params['password']).first
     response_data = {}
 
@@ -34,18 +37,20 @@ class UsersChannel < ApplicationCable::Channel
       user.save!
 
       response_data = {
-        operation: 'loginUser',
+        operation: 'login',
         status: 'success',
-        response: { token: token }
+        data: user,
+        message: 'User has logged in successfully'
       }
     else
       response_data = {
-        operation: 'loginUser',
-        status: 'failed',
-        response: 'User not found'
+        operation: 'login',
+        status: 'fail',
+        data: {user: 'not found'},
+        message: 'User not found'
       }
     end
 
-    ActionCable.server.broadcast 'users', response_data
+    ActionCable.server.broadcast @channel_stream, response_data
   end
 end  

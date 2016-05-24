@@ -3,8 +3,10 @@ class Message
   include NoBrainer::Document::Timestamps
 
   field :content, :type => String
-  field :users, :type => Array
+  field :receivers, :type => Array
 
   belongs_to :user
   belongs_to :room
+
+  validates :content, presence: true
 end

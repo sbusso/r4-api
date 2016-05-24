@@ -2,6 +2,7 @@ class Room
   include NoBrainer::Document
   include NoBrainer::Document::Timestamps
 
-  field :users, :type => Array
+  field :receivers, :type => Array
+
   has_many :messages
 end

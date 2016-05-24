@@ -5,13 +5,13 @@ module ApplicationCable
 
     def connect
       self.current_user = find_verified_user
-      logger.add_tags 'ActionCable', current_user ? current_user.email : 'public'
+      logger.add_tags 'ActionCable', current_user
     end
 
     protected
 
     def find_verified_user
-      User.where(token: cookies['token']).first
+      User.where(token: cookies['token']).first || "public-#{SecureRandom.uuid}"
     end
   end
 end
